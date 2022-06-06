@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import logo from '../images/logo.png'
 import { Icon } from'react-icons-kit'
 import { shoppingCart } from 'react-icons-kit/feather/shoppingCart'
 import { shoppingBag } from 'react-icons-kit/feather/shoppingBag'
