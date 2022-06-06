@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Home } from './Components/Home'
+import { Login } from './Components/Login'
+import { NotFound } from './Components/NotFound'
+import { Signup} from './Components/Signup'
+import { SecretPage } from './Components/SecretPage'
+import { Cart } from './Components/Cart'
+import { Profile } from './Components/Profile'
+import { VerifyAge } from './Components/VerifyAge'
 
-function App() {
+
+export const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <BrowserRouter>
+        <Routes>
+            <Route path ='/' element = {<Home/>}/>
+            <Route path ='/signup' element = {<Signup/>}/>
+            <Route path ='/login' element = {<Login/>}/>
+            <Route path ='/secretpage' element = {<SecretPage/>}/>
+            <Route path ='/cart' element = {<Cart/>}/>
+            <Route path ='/profile' element = {<Profile/>}/>
+            <Route path ='/verify' element = {<VerifyAge/>}/>
+            <Route path ='*' element = {<NotFound/>}/>
+        </Routes>
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App
