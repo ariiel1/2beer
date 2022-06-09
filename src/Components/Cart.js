@@ -25,14 +25,14 @@ export const Cart = () => {
 
     const user = GetCurrentUser();
     
+    //Getting cart items
     const [cartItems, setCartItems]=useState([]);
-
     useEffect(()=>{
         auth.onAuthStateChanged(user=>{
             if(user){
                 fs.collection('cart ' + user.uid).onSnapshot(snapshot=>{
                     const newCartItem = snapshot.docs.map((doc)=>({
-                        ID: doc.id,
+                    id: doc.id,
                         ...doc.data(),
                     }));
                     setCartItems(newCartItem);                    
@@ -44,11 +44,12 @@ export const Cart = () => {
         })
     },[])  
 
+    //Getting total no of products
     const qty = cartItems.map(cartItem=>{
         return cartItem.qty
     })
     const initialValue = 0;
-    const cartQty = qty.reduce(
+    const totalProducts = qty.reduce(
         (previousValue, currentValue) => previousValue + currentValue,
         initialValue
     );
@@ -82,7 +83,12 @@ export const Cart = () => {
 
     const cartMinus=(cartItem)=>{
         Item = cartItem;
-        if(Item.qty > 1){
+        auth.onAuthStateChanged(user=>{
+            if(Item.qty == 0){
+                fs.collection('cart ' + user.uid).doc(cartItem.id).delete()
+            }})
+
+        if(Item.qty >= 1){
             Item.qty = Item.qty - 1;
             Item.TotalPrice = Item.qty * Item.price;
 
@@ -91,6 +97,7 @@ export const Cart = () => {
                     fs.collection('cart ' + user.uid).doc(cartItem.id).update(Item).then(()=>{
                         console.log('reduced')
                     })
+                    
                 }
                 else{
                     console.log('not signed in')
@@ -99,17 +106,22 @@ export const Cart = () => {
         }
     }
 
-     const [totalProducts, setTotalProducts]=useState(0);
-     useEffect(()=>{        
-         auth.onAuthStateChanged(user=>{
-             if(user){
-                 fs.collection('cart ' + user.uid).onSnapshot(snapshot=>{
-                     const qty = snapshot.docs.length;
-                     setTotalProducts(qty);
-                 })
-             }
-         })       
-     })  
+
+    // FUNCTION UNUSED DUE TO CHANGE IN CART INDICATOR
+    //  const [totalProducts, setTotalProducts]=useState(0);
+    //  useEffect(()=>{        
+    //      auth.onAuthStateChanged(user=>{
+    //          if(user){
+    //              fs.collection('cart ' + user.uid).onSnapshot(snapshot=>{
+    //                  const qty = snapshot.docs.length;
+    //                  setTotalProducts(qty);
+    //              })
+    //          }
+    //      })       
+    //  })  
+
+    //quick fix for changing cart indicator
+    // const totalProducts = cartQty;
 
      const handleCheckout=()=>{
         alert('Checkout is not available, sorry :/')
@@ -117,7 +129,9 @@ export const Cart = () => {
    
      return (
         <>
-            <Navbar user={user} totalProducts={totalProducts}/>
+            <div className='sticky'>
+                <Navbar user={user} totalProducts={totalProducts}/>
+            </div>
             <br></br>
             {cartItems.length > 0 && (
                 <div className='container'>
@@ -127,11 +141,11 @@ export const Cart = () => {
                         <h5>cart summary!</h5>
                         <br></br>
                         <div>
-                            Total No. of Items: <span>{cartQty}</span>
+                            Total No. of Items: <span>{totalProducts}</span>
                         </div>
                         <hr></hr>
                         <div>
-                            Total Price: <span>Rp {cartPrice}</span>
+                            Total Price: <span>Rp {(cartPrice).toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
                         </div>
                         <br></br>
                         <button type ='submit' className='btn btn-success btn-md' onClick={handleCheckout}> checkout! </button>

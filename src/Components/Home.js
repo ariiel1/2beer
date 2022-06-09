@@ -3,6 +3,7 @@ import { Navbar } from './Navbar'
 import { Products } from './Products'
 import { auth, fs } from '../firebase-config'
 import { useNavigate } from 'react-router-dom';
+import { CartItems } from './CartItems';
 
 export const Home = () => {
 
@@ -63,25 +64,54 @@ export const Home = () => {
         getProducts();
     })
 
-    const [totalProducts, setTotalProducts]=useState(0);
+    // const [totalProducts, setTotalProducts]=useState(0);
+    // useEffect(()=>{
+    //     auth.onIdTokenChanged(user=>{
+    //         if(user){
+    //             fs.collection('cart '+ user.uid).onSnapshot(snapshot=>{
+    //                 const qty = snapshot.docs.length;
+    //                 setTotalProducts(qty);
+    //             })
+    //         }
+    //     })
+    // })
+
+    //Getting cart items
+    const [cartItems, setCartItems]=useState([]);
     useEffect(()=>{
-        auth.onIdTokenChanged(user=>{
+        auth.onAuthStateChanged(user=>{
             if(user){
-                fs.collection('cart '+ user.uid).onSnapshot(snapshot=>{
-                    const qty = snapshot.docs.length;
-                    setTotalProducts(qty);
+                fs.collection('cart ' + user.uid).onSnapshot(snapshot=>{
+                    const newCartItem = snapshot.docs.map((doc)=>({
+                        id: doc.id,
+                        ...doc.data(),
+                    }));
+                    setCartItems(newCartItem);                    
                 })
             }
+            else{
+                console.log('user is not signed in to retrieve cart');
+            }
         })
+    },[])  
+
+    //Getting total no of products
+    const qty = cartItems.map(cartItem=>{
+        return cartItem.qty
     })
+    const initialValue = 0;
+    const totalProducts = qty.reduce(
+        (previousValue, currentValue) => previousValue + currentValue,
+        initialValue
+    );
 
     let Product;
     const addToCart = (product)=>{
         if(uid!==null){
-            // console.log(product)
+            // console.log(cartItems)
             Product = product
-            Product['qty'] = 1;
-            Product['TotalPrice'] = Product.qty*Product.price;
+            Product.qty = 1
+            Product.TotalPrice = Product.qty*Product.price;
             fs.collection('cart ' + uid).doc(product.id).set(Product).then(()=>{
                 console.log('added to cart')
             })
@@ -94,7 +124,9 @@ export const Home = () => {
 
     return (
         <div>
-            <Navbar user={user} totalProducts={totalProducts}><h1 className='page-text'>products!</h1></Navbar>
+            <div className='sticky'>
+                <Navbar user={user} totalProducts={totalProducts}/>
+            </div>
             <br></br>
             {products.length > 0 && (
                 <div className='container'>

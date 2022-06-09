@@ -17,8 +17,8 @@ export const SingleCartItems = ({cartItem,cartPlus,cartMinus}) => {
     const handleCartDelete=()=>{
         auth.onAuthStateChanged(user=>{
             if(user){
-                fs.collection('cart ' + user.uid).doc(cartItem.ID).delete().then(()=>{
-                    console.log('successfully deleted');
+                fs.collection('cart ' + user.uid).doc(cartItem.id).delete().then(()=>{
+                    console.log(cartItem.id);
                 })
             }
         })
@@ -31,13 +31,13 @@ export const SingleCartItems = ({cartItem,cartPlus,cartMinus}) => {
             </div>
             <div className='product-text title'>{cartItem.title}</div>
             <div className='product-text description'>{cartItem.description}</div>
-            <div className='product-text price'>Rp {cartItem.price}</div>
+            <div className='product-text price'>Rp {(cartItem.price).toLocaleString(undefined, { maximumFractionDigits: 2 })}</div>
             <span>Quantity</span>
             <div className='product-text quantity-box'>
                 <div className='action-btns minus' onClick={handleCartMinus} >
                     <Icon icon={minus} size={20}/>
                 </div>                
-                <div>{cartItem.qty}</div>               
+                <div>{(cartItem.qty)}</div>               
                 <div className='action-btns plus' onClick={handleCartPlus}>
                     <Icon icon={plus} size={20}/>
                 </div>

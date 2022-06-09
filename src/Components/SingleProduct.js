@@ -13,7 +13,7 @@ export const SingleProduct = ({singleProduct, addToCart}) => {
         </div>
         <div className='product-text title'>{singleProduct.title}</div>
         <div className='product-text description'>{singleProduct.description}</div>
-        <div className='product-text price'>Rp {singleProduct.price}</div>
+        <div className='product-text price'>Rp {(singleProduct.price).toLocaleString(undefined, { maximumFractionDigits: 2 })}</div>
         <div className='btn product-btn' onClick={handleAddToCart}>Add to Cart</div>
     </div>
   )

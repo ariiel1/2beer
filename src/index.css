@@ -75,7 +75,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #76DFD6;  
+  background-color: #76DFD6; 
+  overflow: hidden; 
+  /* position: sticky;
+  top: 0; */
 }
 
 @media(max-width: 450px){
@@ -285,4 +288,9 @@
   width: 100%;
   height: auto;
   font-size: 100px;
+}
+
+.sticky{
+  position: sticky;
+  top: 0;
 }
