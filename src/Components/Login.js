@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { auth } from '../firebase-config';
+import { Navbar } from './Navbar';
 export const Login = () => {
 
     const nav = useNavigate();
@@ -22,12 +23,22 @@ export const Login = () => {
             setTimeout(()=>{
                 setSuccessMsg('');
                 nav('/')
-            },3000)
+            },2000)
         }).catch((error=>setErrorMsg(error.message)))
     }
 
     return (
-        <div className='container'>
+        <div>
+            <div className='navbar'>
+                <div className='leftside'>
+                    <div className='logo'>
+                        <Link className='logo-text' to='/'>
+                            <h1 className='logo-text'>2beer!</h1>
+                        </Link>  
+                    </div>
+                </div>
+            </div>
+            <div className='container'>
                 <br></br>
                 <br></br>
                 <h1>Login</h1>
@@ -58,6 +69,8 @@ export const Login = () => {
                     <div className='error-msg'>{errorMsg}</div>
                 </>}
             </div>
+        </div>
+
     )
 }
 

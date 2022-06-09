@@ -33,7 +33,7 @@ export const Signup = () => {
                 setTimeout(()=>{
                     setSuccessMsg('');
                     nav('/login')
-                },3000)
+                },2000)
             }).catch((error=>setErrorMsg(error.message)))
         }).catch((error)=>{
             setErrorMsg(error.message)
@@ -41,6 +41,16 @@ export const Signup = () => {
     }
 
     return (
+        <div>
+            <div className='navbar'>
+                <div className='leftside'>
+                    <div className='logo'>
+                        <Link className='logo-text' to='/'>
+                            <h1 className='logo-text'>2beer!</h1>
+                        </Link>  
+                    </div>
+                </div>
+            </div>
         <div className='container'>
                 <br></br>
                 <br></br>
@@ -76,5 +86,6 @@ export const Signup = () => {
                     <div className='error-msg'>{errorMsg}</div>
                 </>}
             </div>
+        </div>
     )
 }

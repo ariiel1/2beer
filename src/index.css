@@ -294,3 +294,10 @@
   position: sticky;
   top: 0;
 }
+
+.divider{
+  display: flex;  
+  border-bottom: 1px solid #b9b5b5;
+  text-align: center;
+  padding: 0px;
+}

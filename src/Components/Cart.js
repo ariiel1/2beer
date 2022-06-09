@@ -140,10 +140,9 @@ export const Cart = () => {
                     <div className='summary-box'>
                         <h5>cart summary!</h5>
                         <br></br>
-                        <div>
+                        <div className='divider'>
                             Total No. of Items: <span>{totalProducts}</span>
                         </div>
-                        <hr></hr>
                         <div>
                             Total Price: <span>Rp {(cartPrice).toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
                         </div>

@@ -21,7 +21,6 @@ export const Navbar = ({user, totalProducts}) => {
     <div className='leftside'>
       <div className='logo'>
         <Link className='logo-text' to='/'>
-          {/* <img src={logo} alt='logo'/>   */}
           <h1 className='logo-text'>2beer!</h1>
         </Link>  
       </div>
