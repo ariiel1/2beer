@@ -45,6 +45,10 @@ export const Profile = () => {
         })
       }
 
+      const goToVerify=()=>{
+          nav('/verify')
+      }
+
   return (
         <>
             <Navbar user={user} totalProducts={totalProducts}></Navbar>
@@ -52,6 +56,9 @@ export const Profile = () => {
             {user&&<>
                 <div className='container'>
                     <h1 className='text-center'>{user}</h1>
+                    <div className='btn btn-success btn-md logout-btn'onClick={goToVerify}>verify age!</div>
+                    <br></br>
+                    <br></br>
                     <div className='btn btn-danger btn-md logout-btn'onClick={handleLogout}>logout!</div>
                 </div>
             </>}

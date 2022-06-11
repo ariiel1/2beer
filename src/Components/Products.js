@@ -2,6 +2,8 @@ import React from 'react'
 import { SingleProduct } from './SingleProduct'
 
 export const Products = ({products, addToCart}) => {
+    
+    
 
     // console.log(products);
 

@@ -69,7 +69,7 @@ export const Cart = () => {
         Item.qty = Item.qty + 1;
         Item.TotalPrice = Item.qty * Item.price;
 
-        auth.onIdTokenChanged(user=>{
+        auth.onAuthStateChanged(user=>{
             if(user){
                 fs.collection('cart ' + user.uid).doc(cartItem.id).update(Item).then(()=>{
                     console.log('added')

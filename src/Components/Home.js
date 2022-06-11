@@ -64,18 +64,6 @@ export const Home = () => {
         getProducts();
     })
 
-    // const [totalProducts, setTotalProducts]=useState(0);
-    // useEffect(()=>{
-    //     auth.onIdTokenChanged(user=>{
-    //         if(user){
-    //             fs.collection('cart '+ user.uid).onSnapshot(snapshot=>{
-    //                 const qty = snapshot.docs.length;
-    //                 setTotalProducts(qty);
-    //             })
-    //         }
-    //     })
-    // })
-
     //Getting cart items
     const [cartItems, setCartItems]=useState([]);
     useEffect(()=>{

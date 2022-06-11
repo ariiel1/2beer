@@ -6,6 +6,8 @@ export const SingleProduct = ({singleProduct, addToCart}) => {
         addToCart(singleProduct);
     }
 
+
+
   return (
     <div className='product'>
         <div className='product-img'>
