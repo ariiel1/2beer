@@ -27,32 +27,35 @@ export const VerifyAge = () => {
         
     //   }
 
-    // const NodeAuth = () => {
-    //     var keys = {'access_key': 'JWOYAM50616MPDAXORTCNE65H', 'secret_key': 'e5IDFsojdZ2sJeXTvr9tC_PIIUgoO_fKzya_yMsAg9fGNkMkVslZRn04IPE3lFvi'}
-    //     fetch("/auth/signatures", {
-    //         method: 'POST',
-    //         headers: {
-    //             'Contenty-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(keys)
-    //         })
-    //         .then((response) => response.json()) 
-    //         .then((data) => {
-    //             setNauth(data)
-    //         })
-    //         .catch(e => { console.log(e.message) })
-    //     }
-    
-    // async function nodefluxAuth() {
-    //     const res = await axios.post('http://localhost:3000/api/auth/signatures', {
-    //         'access_key': 'JWOYAM50616MPDAXORTCNE65H',
-    //         'secret_key': 'e5IDFsojdZ2sJeXTvr9tC_PIIUgoO_fKzya_yMsAg9fGNkMkVslZRn04IPE3lFvi',
-    //     }, {});
-    //     console.log(res.data.headers)
-    // }
+    const [b64, setB64] = useState('')
+
+    const image = 'imagesadad'
+
+    const handleBased = e => {
+        const files = e.target.files;
+        const file = files[0];
+        getBase64(file);
+  };
+ 
+  const onLoad = fileString => {
+    // console.log(fileString);
+    setB64(fileString)
+    console.log(b64)
+  };
+ 
+  const getBase64 = file => {
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      onLoad(reader.result);
+  }};
 
     async function nodefluxAuth() {
-        const res = await axios.post('http://localhost:4000/auth');
+        const res = await axios.post('https://twobeer-be.herokuapp.com/nodeflux', {
+            'image': b64
+        }, {
+            headers: 'application/json'
+        });
         console.log(res.data)
     }
     
@@ -109,7 +112,10 @@ export const VerifyAge = () => {
     <div>
         <Navbar user = {user} totalProducts={totalProducts}/>
         <button onClick={nodefluxAuth}>test</button>
-        
+        <form>
+        <input type="file" onChange={handleBased} />
+        {/* <textarea rows="50" cols="50" value={this.base64code}></textarea> */}
+      </form>
     </div>
   )
 }
