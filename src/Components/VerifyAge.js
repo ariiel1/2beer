@@ -43,12 +43,17 @@ export const VerifyAge = () => {
     //         .catch(e => { console.log(e.message) })
     //     }
     
+    // async function nodefluxAuth() {
+    //     const res = await axios.post('http://localhost:3000/api/auth/signatures', {
+    //         'access_key': 'JWOYAM50616MPDAXORTCNE65H',
+    //         'secret_key': 'e5IDFsojdZ2sJeXTvr9tC_PIIUgoO_fKzya_yMsAg9fGNkMkVslZRn04IPE3lFvi',
+    //     }, {});
+    //     console.log(res.data.headers)
+    // }
+
     async function nodefluxAuth() {
-        const res = await axios.post('/auth/signatures', {
-            'access_key': 'JWOYAM50616MPDAXORTCNE65H',
-            'secret_key': 'e5IDFsojdZ2sJeXTvr9tC_PIIUgoO_fKzya_yMsAg9fGNkMkVslZRn04IPE3lFvi',
-        }, {});
-        console.log(res.data.headers)
+        const res = await axios.post('http://localhost:4000/auth');
+        console.log(res.data)
     }
     
     function GetCurrentUser(){
