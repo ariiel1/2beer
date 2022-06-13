@@ -56,7 +56,7 @@ export const VerifyAge = () => {
                             },2000)
                         })
                     }
-                    if(res.data.result[0].tanggal_lahir == ""){
+                    if(res.data.message == 'OCR_KTP Service Success' && res.data.result[0].tanggal_lahir == ""){
                         setErrorMsg('Date of birth not detected')
                     }
                     else{
