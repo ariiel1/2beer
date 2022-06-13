@@ -18,7 +18,6 @@ export const Signup = () => {
     const handleSignup=(e)=>{
         e.preventDefault();
         auth.createUserWithEmailAndPassword(email, password).then((credentials)=>{
-            console.log(credentials);;
             fs.collection('users').doc(credentials.user.uid).set({
                 Name: name,
                 Email: email,

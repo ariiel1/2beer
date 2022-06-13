@@ -1,12 +1,9 @@
 import React from 'react'
 
 export const SingleProduct = ({singleProduct, addToCart}) => {
-    // console.log(singleProduct);
     const handleAddToCart=()=>{
         addToCart(singleProduct);
     }
-
-
 
   return (
     <div className='product'>

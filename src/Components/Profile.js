@@ -2,7 +2,7 @@ import React from 'react'
 import { Navbar } from './Navbar'
 import { useState, useEffect } from 'react';
 import { auth, fs } from '../firebase-config';
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export const Profile = () => {
 

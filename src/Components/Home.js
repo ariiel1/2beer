@@ -41,7 +41,6 @@ export const Home = () => {
     }
 
     const user = GetCurrentUser();
-    // console.log(user);
 
     const[products, setProducts]=useState([]);
 
@@ -96,7 +95,6 @@ export const Home = () => {
     let Product;
     const addToCart = (product)=>{
         if(uid!==null){
-            // console.log(cartItems)
             Product = product
             Product.qty = 1
             Product.TotalPrice = Product.qty*Product.price;

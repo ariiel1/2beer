@@ -9,13 +9,6 @@ export const Navbar = ({user, totalProducts}) => {
 
   const nav = useNavigate();
 
-  const handleLogout=()=>{
-    auth.signOut().then(()=>{
-      nav('/login')
-    })
-  }
-
-
   return (
     <div className='navbar'>
     <div className='leftside'>

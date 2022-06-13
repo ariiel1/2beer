@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { auth } from '../firebase-config';
-import { Navbar } from './Navbar';
 export const Login = () => {
 
     const nav = useNavigate();
@@ -14,7 +13,6 @@ export const Login = () => {
 
     const handleLogin=(e)=>{
         e.preventDefault();
-        // console.log(email, password)
         auth.signInWithEmailAndPassword(email, password).then(()=>{
             setSuccessMsg('Login Successful. You will be automatically redirected to the Home page');
             setEmail('');

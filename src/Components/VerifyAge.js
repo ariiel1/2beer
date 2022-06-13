@@ -146,7 +146,6 @@ export const VerifyAge = () => {
             <div className='common-box'>
                 <h5>Input KTP Image</h5>
                 <input type="file" onChange={handleBased} className='form-control'></input>
-                {/* <h7>max file size: 800 KB</h7> */}
                 <br></br>
                 <button onClick={nodeFlux} className='btn btn-success btn-md w-100'>verify!</button>
             </div>
