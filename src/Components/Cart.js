@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { Navbar } from './Navbar'
 import { auth,fs } from '../firebase-config';
 import { CartItems } from './CartItems';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 export const Cart = () => {
+
+    const nav = useNavigate()
 
     function GetCurrentUser(){
         const [user, setUser]=useState(null);
@@ -24,6 +27,25 @@ export const Cart = () => {
     }
 
     const user = GetCurrentUser();
+
+    function GetCurrentUserAge(){
+        const [userAge, setUserAge]=useState(null);
+        useEffect(()=>{
+            auth.onIdTokenChanged(user=>{
+                if(user){
+                    fs.collection('users').doc(user.uid).get().then(temp=>{
+                        setUserAge(temp.data().age);
+                    })
+                }
+                else{
+                    setUserAge(null);
+                }
+            })
+        })
+        return userAge;
+    }
+
+    const userAge = GetCurrentUserAge();
     
     //Getting cart items
     const [cartItems, setCartItems]=useState([]);
@@ -106,26 +128,18 @@ export const Cart = () => {
         }
     }
 
-
-    // FUNCTION UNUSED DUE TO CHANGE IN CART INDICATOR
-    //  const [totalProducts, setTotalProducts]=useState(0);
-    //  useEffect(()=>{        
-    //      auth.onAuthStateChanged(user=>{
-    //          if(user){
-    //              fs.collection('cart ' + user.uid).onSnapshot(snapshot=>{
-    //                  const qty = snapshot.docs.length;
-    //                  setTotalProducts(qty);
-    //              })
-    //          }
-    //      })       
-    //  })  
-
-    //quick fix for changing cart indicator
-    // const totalProducts = cartQty;
-
      const handleCheckout=()=>{
-        alert('Checkout is not available, sorry :/')
-     }
+        if(userAge == 0){
+            nav('/verify')
+        }
+        if(userAge >= 2002 && userAge != 0){
+            alert('Sorry, you are not old enough!')
+        }
+        if(userAge <= 2001 && userAge != 0){
+            alert('You are old enough but unfortunately the store is not real!')
+        }
+    }
+        
    
      return (
         <>
@@ -137,6 +151,13 @@ export const Cart = () => {
                 <div className='container'>
                     <h1 className='page-text'>cart!</h1>
 
+                    {userAge == 0 && (<>
+                    <h5 className='error-msg'>
+                        Age verification required! Verify
+                        <Link to='/verify' className='link'> here</Link>
+                    </h5>
+                    </>)} 
+
                     <div className='summary-box'>
                         <h5>cart summary!</h5>
                         <br></br>
@@ -147,7 +168,11 @@ export const Cart = () => {
                             Total Price: <span>Rp {(cartPrice).toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
                         </div>
                         <br></br>
+                        
+                        
                         <button type ='submit' className='btn btn-success btn-md' onClick={handleCheckout}> checkout! </button>
+                       
+                        
                     </div>
 
                     <div className='products-box'>

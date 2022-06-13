@@ -2,34 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from './Navbar';
 import { auth, fs } from '../firebase-config';
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
 export const VerifyAge = () => {
+    
+    const nav = useNavigate()
 
+    const [errorMsg, setErrorMsg]=useState('');
+    const [successMsg, setSuccessMsg]=useState('');
 
-    const [ocr, setOCR] = useState('')
-    const [nauth, setNauth] = useState('')
-
-    // const getOCR = () => {
-    //     var img = {'images': ['data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAADMElEQVR4nOzVwQnAIBQFQYXff81RUkQCOyDj1YOPnbXWPmeTRef+/3O/OyBjzh3CD95BfqICMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMK0CMO0TAAD//2Anhf4QtqobAAAAAElFTkSuQmCC']}
-    //     fetch("https://api.cloud.nodeflux.io/syncv2/analytics/ocr-ktp", {
-    //     mode: 'cors',
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': 'NODEFLUX-HMAC-SHA256 Credential=JWOYAM50616MPDAXORTCNE65H/20220611/nodeflux.api.v1beta1.ImageAnalytic/StreamImageAnalytic, SignedHeaders=x-nodeflux-timestamp, Signature=9c8b382cd38f0a426ae7942f04ac539987ba01bce50988fdc1a17efe576d63d4',
-    //         'x-nodeflux-timestamp': '20220611T023943Z',},
-    //       body: JSON.stringify(img)
-    //     })
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //         setOCR(data)
-    //     }) 
-        
-    //   }
-
+    //base 64 conversion taken from https://codingshiksha.com
     const [b64, setB64] = useState('')
-
-    const image = 'imagesadad'
 
     const handleBased = e => {
         const files = e.target.files;
@@ -38,26 +21,53 @@ export const VerifyAge = () => {
   };
  
   const onLoad = fileString => {
-    // console.log(fileString);
-    setB64(fileString)
-    console.log(b64)
+        setB64(fileString)
   };
  
   const getBase64 = file => {
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      onLoad(reader.result);
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+        onLoad(reader.result);
   }};
 
-    async function nodefluxAuth() {
+    async function nodeFlux() {
         const res = await axios.post('https://twobeer-be.herokuapp.com/nodeflux', {
             'image': b64
         }, {
             headers: 'application/json'
-        });
-        console.log(res.data)
+        })
+        .then((res) => {
+            console.log(res)
+            return res
+        })
+        .then((res) => {
+            auth.onAuthStateChanged(user=>{
+                if(user){
+                    if(res.data.message == 'OCR_KTP Service Success' && res.data.result[0].tanggal_lahir != ""){
+                        fs.collection('users').doc(user.uid).update({age: parseInt(res.data.result[0].tanggal_lahir.slice(6, 10))})
+                        .then(() => {
+                            console.log('age update');
+                            setSuccessMsg('Verification successful, you will be redirected to the home page!')
+                            setErrorMsg('')
+                            setTimeout(()=>{
+                                setSuccessMsg('');
+                                nav('/')
+                            },2000)
+                        })
+                    }
+                    if(res.data.result[0].tanggal_lahir == ""){
+                        setErrorMsg('Date of birth not detected')
+                    }
+                    else{
+                        setErrorMsg(res.data.message)
+                    }
+                }
+            })
+        })
+        
     }
+
     
     function GetCurrentUser(){
         const [user, setUser]=useState(null);
@@ -77,6 +87,25 @@ export const VerifyAge = () => {
     }
 
     const user = GetCurrentUser();
+
+    function GetCurrentUserAge(){
+        const [userAge, setUserAge]=useState(null);
+        useEffect(()=>{
+            auth.onIdTokenChanged(user=>{
+                if(user){
+                    fs.collection('users').doc(user.uid).get().then(temp=>{
+                        setUserAge(temp.data().age);
+                    })
+                }
+                else{
+                    setUserAge(null);
+                }
+            })
+        })
+        return userAge;
+    }
+
+    const userAge = GetCurrentUserAge();
 
     const [cartItems, setCartItems]=useState([]);
     useEffect(()=>{
@@ -111,11 +140,25 @@ export const VerifyAge = () => {
   return (
     <div>
         <Navbar user = {user} totalProducts={totalProducts}/>
-        <button onClick={nodefluxAuth}>test</button>
-        <form>
-        <input type="file" onChange={handleBased} />
-        {/* <textarea rows="50" cols="50" value={this.base64code}></textarea> */}
-      </form>
+        <br></br>
+        <div className='container'>
+            <h1 className='page-text'>verify age!</h1>
+            <div className='common-box'>
+                <h5>Input KTP Image</h5>
+                <input type="file" onChange={handleBased} className='form-control'></input>
+                {/* <h7>max file size: 800 KB</h7> */}
+                <br></br>
+                <button onClick={nodeFlux} className='btn btn-success btn-md w-100'>verify!</button>
+            </div>
+            {successMsg&&<>
+                    <div className='success-msg'>{successMsg}</div>
+                    <br></br>
+                </>}
+            {errorMsg&&<>
+                    <br></br>
+                    <div className='error-msg'>{errorMsg}</div>
+                </>}
+        </div>
     </div>
   )
 }

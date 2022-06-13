@@ -17,13 +17,12 @@ export const Signup = () => {
 
     const handleSignup=(e)=>{
         e.preventDefault();
-        // console.log(name, email, password)
         auth.createUserWithEmailAndPassword(email, password).then((credentials)=>{
             console.log(credentials);;
             fs.collection('users').doc(credentials.user.uid).set({
                 Name: name,
                 Email: email,
-                Password: password
+                age: 0
             }).then(()=>{
                 setSuccessMsg('Sign Up Successful. You will be automatically redirected to the Login page');
                 setName('');
@@ -54,12 +53,12 @@ export const Signup = () => {
         <div className='container'>
                 <br></br>
                 <br></br>
-                <h1>Sign Up</h1>
-                <hr></hr>
+                <h1 className='page-text'>sign up!</h1>
                 {successMsg&&<>
                     <div className='success-msg'>{successMsg}</div>
                     <br></br>
                 </>}
+                <div className='common-box'>
                 <form className='form-group' autoComplete='off' onSubmit={handleSignup}>
                     <label>Username</label>
                     <input type='text' className='form-control' required
@@ -81,6 +80,7 @@ export const Signup = () => {
                         <button type ='submit' className='btn btn-success btn-md login-btn'> Sign Up </button>
                     </div>
                 </form>
+                </div>
                 {errorMsg&&<>
                     <br></br>
                     <div className='error-msg'>{errorMsg}</div>

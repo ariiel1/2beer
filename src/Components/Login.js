@@ -41,12 +41,12 @@ export const Login = () => {
             <div className='container'>
                 <br></br>
                 <br></br>
-                <h1>Login</h1>
-                <hr></hr>
+                <h1 className='page-text'>login!</h1>
                 {successMsg&&<>
                     <div className='success-msg'>{successMsg}</div>
                     <br></br>
                 </>}
+                <div className='common-box'>
                 <form className='form-group' autoComplete='off' onSubmit={handleLogin}>
                     <label>Email</label>
                     <input type='email' className='form-control' required
@@ -64,6 +64,7 @@ export const Login = () => {
                         <button type ='submit' className='btn btn-success btn-md login-btn'> Login </button>
                     </div>
                 </form>
+                </div>
                 {errorMsg&&<>
                     <br></br>
                     <div className='error-msg'>{errorMsg}</div>
