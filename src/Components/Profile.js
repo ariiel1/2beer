@@ -46,17 +46,34 @@ export const Profile = () => {
 
     const userAge = GetCurrentUserAge();
 
-    const [totalProducts, setTotalProducts]=useState(0);
-     useEffect(()=>{        
-         auth.onAuthStateChanged(user=>{
-             if(user){
-                 fs.collection('cart ' + user.uid).onSnapshot(snapshot=>{
-                     const qty = snapshot.docs.length;
-                     setTotalProducts(qty);
-                 })
-             }
-         })       
-     })  
+    //Getting cart items
+    const [cartItems, setCartItems]=useState([]);
+    useEffect(()=>{
+        auth.onAuthStateChanged(user=>{
+            if(user){
+                fs.collection('cart ' + user.uid).onSnapshot(snapshot=>{
+                    const newCartItem = snapshot.docs.map((doc)=>({
+                        id: doc.id,
+                        ...doc.data(),
+                    }));
+                    setCartItems(newCartItem);                    
+                })
+            }
+            else{
+                console.log('user is not signed in to retrieve cart');
+            }
+        })
+    },[])  
+
+    //Getting total no of products
+    const qty = cartItems.map(cartItem=>{
+        return cartItem.qty
+    })
+    const initialValue = 0;
+    const totalProducts = qty.reduce(
+        (previousValue, currentValue) => previousValue + currentValue,
+        initialValue
+    );
 
      const handleLogout=()=>{
         auth.signOut().then(()=>{

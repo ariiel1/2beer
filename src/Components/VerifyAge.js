@@ -107,35 +107,34 @@ export const VerifyAge = () => {
 
     const userAge = GetCurrentUserAge();
 
+    //Getting cart items
     const [cartItems, setCartItems]=useState([]);
     useEffect(()=>{
-        auth.onIdTokenChanged(user=>{
+        auth.onAuthStateChanged(user=>{
             if(user){
                 fs.collection('cart ' + user.uid).onSnapshot(snapshot=>{
                     const newCartItem = snapshot.docs.map((doc)=>({
-                        cartId: doc.id,
+                        id: doc.id,
                         ...doc.data(),
-                    }))
-                    setCartItems(newCartItem);
+                    }));
+                    setCartItems(newCartItem);                    
                 })
             }
             else{
-                console.log('not signed in')
+                console.log('user is not signed in to retrieve cart');
             }
         })
-    })
+    },[])  
 
-    const [totalProducts, setTotalProducts]=useState(0);
-    useEffect(()=>{
-        auth.onIdTokenChanged(user=>{
-            if(user){
-                fs.collection('cart '+ user.uid).onSnapshot(snapshot=>{
-                    const qty = snapshot.docs.length;
-                    setTotalProducts(qty);
-                })
-            }
-        })
+    //Getting total no of products
+    const qty = cartItems.map(cartItem=>{
+        return cartItem.qty
     })
+    const initialValue = 0;
+    const totalProducts = qty.reduce(
+        (previousValue, currentValue) => previousValue + currentValue,
+        initialValue
+    );
 
   return (
     <div>
